@@ -25,7 +25,7 @@ public class BoardGUI extends JPanel implements ActionListener{
 	public static  boolean blackturn;
 	public short size=8;
 	public boolean gameOver=false;
-	public boolean ai=true;
+	public boolean ai=false;
 	ArrayList<int[]> emptyListo=new ArrayList<int[]>();
 	ArrayList<int[]> emptyLista=new ArrayList<int[]>();
 	
@@ -213,92 +213,8 @@ public class BoardGUI extends JPanel implements ActionListener{
 			chesstile[figure[2]][figure[1]].setDisabledIcon(icon[(int) ((Math.abs(figure[0]))*2-1.5-0.5*Integer.signum(figure[0]))]);
 			if(!blackturn)chesstile[figure[2]][figure[1]].setEnabled(true);
 		}
-	/*	for (int x = 0; x < size; x++){
-			for (int y = 0; y < size; y++){
-				if(newgame)
-					if(config[x][y]<0)
-					{
-						chesstile[x][y].setEnabled(true);
-					}
-					else
-					{
-						chesstile[x][y].setEnabled(false);
-					}
-				
-				//Set the new Icons for each Button
-				//This formula remaps the values from -6 - +6 to 0-11
-				// e.g. : 1=>1, -1=>2, 2=>3 etc
-				if(config[x][y]!=0)
-				{
-					chesstile[x][y].setIcon(icon[(int) ((Math.abs(config[x][y]))*2-1.5-0.5*Integer.signum(config[x][y]))]);
-					chesstile[x][y].setDisabledIcon(icon[(int) ((Math.abs(config[x][y]))*2-1.5-0.5*Integer.signum(config[x][y]))]);
-				}
-				else
-				{
-					chesstile[x][y].setIcon(null);
-				}
-
-			}
-		}*/
 	}
 	
-	public void actionPerformedd(ActionEvent e)
-	{
-		int sourceX=0,sourceY=0;
-		boolean[][] selectable=new boolean[size][size];
-		//get Source of the ActionEvent
-		for (int x = 0; x < size; x++){
-			for (int y = 0; y < size; y++){
-				if (e.getSource() == chesstile[x][y]){
-					sourceX=x;
-					sourceY=y;
-					break;
-				}
-			}
-		}
-		
-		if(!pieceSelected)
-		{
-			selectable=Move.legalMoves(sourceX, sourceY,Move.configuration);
-			
-			frx=sourceX;
-			fry=sourceY;
-			pieceSelected=true;
-		}
-		else
-		{
-			if(Move.doMove(blackturn?1:-1,frx,fry,sourceX,sourceY))
-			{
-				blackturn=!blackturn;
-			}
-
-			pieceSelected=false;
-			//enable Buttons for next Move
-			if((blackturn&&Move.ai))
-			{
-				Move.aiMove(blackturn?BLACK:WHITE);
-				blackturn=!blackturn;
-			}
-			selectable=Move.selectable(blackturn);
-			//end the game
-		}
-		
-		if(gameOver){
-			for (int x = 0; x < size; x++){
-				for (int y = 0; y < size; y++){	
-					chesstile[x][y].setEnabled(false);
-				}
-			}
-		}
-		else
-		{
-			for (int x = 0; x < size; x++){
-				for (int y = 0; y < size; y++){	
-					chesstile[x][y].setEnabled(selectable[x][y]);
-				}
-			}
-		}
-	}
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
@@ -339,7 +255,8 @@ public class BoardGUI extends JPanel implements ActionListener{
 			}
 
 			pieceSelected=false;
-			//enable Buttons for next Move
+			//enable Buttons for next 
+
 			if((blackturn&&ai))
 			{
 				gameLogic.aiMove(blackturn?BLACK:WHITE);

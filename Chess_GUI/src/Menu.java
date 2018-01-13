@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
@@ -18,6 +19,7 @@ public class Menu extends JFrame implements ActionListener {
 	static BoardGUI board=new BoardGUI((short) 8);
 	public Menu()
 	{
+		//TODO Design the menu gui
 		JFrame menu=new JFrame();
 		JPanel menuPane=new JPanel();
 		menu.setTitle("Java-Chess GUI");
@@ -63,9 +65,7 @@ public class Menu extends JFrame implements ActionListener {
 	public static void main(String[] args)
 	{
 		Menu menu= new Menu();
-		////Move.setBoard(board);
-		//Move.init();
-		//board.aibattle();
+
 		
 		
 	}
@@ -77,11 +77,14 @@ public class Menu extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 		if(e.getSource()==reset)
 			//Move.init();
+			board.gameLogic.init();
 		if(e.getSource()==toggleAI)
 			if(toggleAI.isSelected())
 				board.ai=true;
+			
 			else
 				board.ai=false;
+		
 	}
 
 	public static ChessLogic getLogic() {
