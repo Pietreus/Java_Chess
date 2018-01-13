@@ -60,11 +60,11 @@ public class ChessLogic {
 	{
 		StartConfig();
 		graphboard.newgame=true;
+		BoardGUI.blackturn=false;
+		movingPlayer=WHITE;
 		graphboard.paintFigures(blackTeam,whiteTeam);
 		graphboard.newgame=false;
 		graphboard.gameOver=false;
-		BoardGUI.blackturn=false;
-		movingPlayer=WHITE;
 		blackCastling[0]=true;
 		blackCastling[1]=true;
 		whiteCastling[0]=true;
@@ -72,41 +72,6 @@ public class ChessLogic {
 	}
 	
 
-	/*public boolean[][] newAnyLegalMoves(int player,int index)
-	{
-		int[] movingPiece;
-		ArrayList<int[]> movingTeam;
-		if(player==BLACK)
-		{
-			//king=blackTeam.get(0);
-			movingPiece=blackTeam.get(index);
-			movingTeam=blackTeam;
-		}
-		else
-		{
-			//king=whiteTeam.get(0);
-			movingPiece=whiteTeam.get(index);
-			movingTeam=blackTeam;
-		}
-
-		boolean legal[][]=new boolean[size][size];
-		for(int[] everyPiece: movingTeam)
-		{
-			ArrayList<int[]> allMoves=possibleMoves(everyPiece,false);
-			for(int[] everyMove: allMoves)
-			{
-				
-				ChessLogic tempInstance=new ChessLogic(blackTeam,whiteTeam);
-				if(tempInstance.doMove(player,everyPiece[1],everyPiece[2],everyMove[0],everyMove[1],false))
-				{
-					legal[everyMove[0]][everyMove[1]]=true;
-					break;					
-				}
-			}
-		}
-
-		return legal;
-	}*/
 	
 	public ArrayList<int[]> possibleMoves(int[] piece,boolean suppressCheckSearch)
 	{
@@ -405,6 +370,7 @@ public class ChessLogic {
 		
 		return allMoves;
 	}
+
 	private boolean figureAt(int team,int targetX,int targetY)
 	{
 		ArrayList<int[]> search=team==BLACK?blackTeam:whiteTeam;
@@ -417,31 +383,11 @@ public class ChessLogic {
 		
 		return false;
 	}
-	/*private boolean freeWay(int frx, int fry, int desx, int desy) {
-		// TODO Rewrite function; repetitive code
-		// DONE
-		int distx=desx-frx;
-		int disty=desy-fry;
-		int dist= Math.abs(desx-frx)>Math.abs(desy-fry) ? Math.abs(desx-frx):Math.abs(desy-fry);
-		
-			for(int i=Integer.signum(distx),j=Integer.signum(disty);Math.abs(i)<dist&&Math.abs(j)<dist;i+=Integer.signum(distx),j+=Integer.signum(disty))
-			{
 
-				if(configuration[frx+i][fry+j]!=0)
-				{
-					//System.out.println("The way is blocked");
-					return false;		
-				}
-			}
-		return true;
-	}*/
-
-	private int[][] StartConfig()
-	{
-		int[][] configArray=new int[size][size];		
-		
-		//TODO alternative using arrayLists
-			
+	private void StartConfig()
+	{		
+		blackTeam.clear();
+		whiteTeam.clear();
 		
 		int[] backlineFigure={2,3,4,6,5,4,3,2};
 		int[] blackKing={5,4,0};
@@ -461,7 +407,6 @@ public class ChessLogic {
 			whiteTeam.add(whiteFigure);
 		}
 		//blackTeam.add();
-		return configArray;
 	}
 	
 	/*public boolean[][] selectable(boolean blackturn)
