@@ -16,7 +16,7 @@ public class BoardGUI extends JPanel implements ActionListener{
 	private static final long serialVersionUID = 1L;
 
 	
-	public JPanel board;
+	//public JPanel board;
 
 	private static JButton[][] chesstile;
 	private JLabel[] xlabel,ylabel;
@@ -26,17 +26,17 @@ public class BoardGUI extends JPanel implements ActionListener{
 	public short size=8;
 	public boolean gameOver=false;
 	public boolean ai=false;
-	ArrayList<int[]> emptyListo=new ArrayList<int[]>();
-	ArrayList<int[]> emptyLista=new ArrayList<int[]>();
+	ArrayList<int[]> emptyList1=new ArrayList<int[]>();
+	ArrayList<int[]> emptyList2=new ArrayList<int[]>();
 	
-	ChessLogic gameLogic=new ChessLogic(emptyLista,emptyListo);
+	ChessLogic gameLogic=new ChessLogic(emptyList1,emptyList2);
 	
-	//private ImageIcon bpawn,wpawn,brook,wrook,bknight,wknight,bbishop,wbishop,bking,wking,bqueen,wqueen;
+
 	private ImageIcon icon[]=new ImageIcon[12];
 	
 	public static final int BLACK=1;
 	public static final int WHITE=0;
-	
+	//TODO use of enums rather useless here, find alternative
 	public static enum Figure
 	{
 		PAWN(1,"pawn"),
@@ -89,12 +89,12 @@ public class BoardGUI extends JPanel implements ActionListener{
 
 	}
 	boolean newgame=true;
+	
 	public BoardGUI(short selectSize){
 
-		
 		size=selectSize;
-		board=new JPanel();
-		board.setLayout(new GridLayout(size+1,size+1));
+		//board=new JPanel();
+		setLayout(new GridLayout(size+1,size+1));
 		
 		chesstile=new JButton[size][size];
 		ylabel=new JLabel[size+1];
@@ -104,7 +104,7 @@ public class BoardGUI extends JPanel implements ActionListener{
 			ylabel[x].setHorizontalAlignment(JLabel.CENTER);
 			ylabel[x].setFont(new Font("Monospaced", Font.BOLD, 45));
 			
-			board.add(ylabel[x]);
+			add(ylabel[x]);
 			for(int y = 0; y < size; y++) 
 			{//Creating all the Buttons
 				
@@ -154,7 +154,7 @@ public class BoardGUI extends JPanel implements ActionListener{
 				chesstile[x][y].setFocusPainted(false);
 				chesstile[x][y].setBorderPainted(false);
 				chesstile[x][y].setSize(30,30);
-				board.add(chesstile[x][y]);
+				add(chesstile[x][y]);
 				chesstile[x][y].setEnabled(false);
 			}
 		}
@@ -166,7 +166,7 @@ public class BoardGUI extends JPanel implements ActionListener{
 			xlabel[i].setHorizontalAlignment(JLabel.CENTER);
 			xlabel[i].setFont(new Font("Monospaced", Font.BOLD, 45));
 			
-			board.add(xlabel[i]);
+			add(xlabel[i]);
 			
 		}
 		//Create the Icons
@@ -201,6 +201,8 @@ public class BoardGUI extends JPanel implements ActionListener{
 				
 			}
 		}
+		//Formulas for assigning the Icons to the right figures
+		//TODO totally chaotic, find more elegant alternative
 		for(int[] figure:black)
 		{
 			chesstile[figure[2]][figure[1]].setIcon(icon[(int) ((Math.abs(figure[0]))*2-1.5-0.5*Integer.signum(figure[0]))]);
@@ -217,7 +219,8 @@ public class BoardGUI extends JPanel implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e)
-	{
+	{//When one of the board buttons is clicked
+		//find source
 		int sourceX=0,sourceY=0;
 		ArrayList<int[]> selectable=new ArrayList<int[]>();
 		//get Source of the ActionEvent
@@ -230,7 +233,7 @@ public class BoardGUI extends JPanel implements ActionListener{
 				}
 			}
 		}
-		
+		//if the player just selected the piece he wants to move
 		if(!pieceSelected)
 		{
 			frx=sourceX;
@@ -247,7 +250,7 @@ public class BoardGUI extends JPanel implements ActionListener{
 			}
 			selectable=gameLogic.possibleMoves(selectedPiece,false);
 		}
-		else
+		else//if the player has already selected a piece he wants to move
 		{
 			if(gameLogic.doMove((blackturn?1:-1),fry,frx,sourceY,sourceX,true))
 			{
@@ -266,9 +269,9 @@ public class BoardGUI extends JPanel implements ActionListener{
 				selectable=gameLogic.blackTeam;
 			else
 				selectable=gameLogic.whiteTeam;
-			//end the game
+			
 		}
-		
+		//end the game
 		if(gameOver){
 			for (int x = 0; x < size; x++){
 				for (int y = 0; y < size; y++){	

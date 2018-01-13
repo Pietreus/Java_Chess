@@ -28,16 +28,6 @@ public class ChessLogic {
 	{
 		blackTeam=blackSetUp;
 		whiteTeam=whiteSetUp;
-		/*configuration=new int[size][size];
-		
-		for(int[] figure:blackTeam)
-		{
-			configuration[figure[1]][figure[2]]=figure[0];
-		}
-		for(int[] figure:whiteTeam)
-		{
-			configuration[figure[1]][figure[2]]=figure[0];
-		}*/
 	}
 	public ChessLogic(ArrayList<int[]> blackSetUp,ArrayList<int[]> whiteSetUp,boolean[] newBlackCastling,boolean[] newWhiteCastling,int[] newEnPassantCoords)
 	{
@@ -77,10 +67,6 @@ public class ChessLogic {
 	{
 		ArrayList<int[]> allMoves=new ArrayList<int[]>();
 		int team=Integer.signum(piece[0]);
-		//int team=Integer.signum(piece[0]);
-		
-		//ArrayList<int[]> enemyTeam=team==1?whiteTeam:blackTeam;
-		//ArrayList<int[]> movingTeam=team==-1?whiteTeam:blackTeam;
 		
 		int[] save={piece[1],piece[2]};
 		allMoves.add(save);
@@ -99,7 +85,7 @@ public class ChessLogic {
 				if(!suppressCheckSearch)
 				{
 					doMove(movingPlayer, piece[1],piece[2],newCoordinates[0],newCoordinates[1],false);
-					if(!newCheck(movingPlayer))
+					if(!check(movingPlayer))
 						allMoves.add(newCoordinates);
 					undoMove();
 				}
@@ -119,7 +105,7 @@ public class ChessLogic {
 				if(!suppressCheckSearch)
 				{
 					doMove(movingPlayer, piece[1],piece[2],newCoordinatesp[0],newCoordinatesp[1],false);
-					if(!newCheck(movingPlayer))
+					if(!check(movingPlayer))
 						allMoves.add(newCoordinatesp);
 					undoMove();
 
@@ -137,7 +123,7 @@ public class ChessLogic {
 				if(!suppressCheckSearch)
 				{
 					doMove(movingPlayer, piece[1],piece[2],newCoordinatespp[0],newCoordinatespp[1],false);
-					if(!newCheck(movingPlayer))
+					if(!check(movingPlayer))
 						allMoves.add(newCoordinatespp);
 					undoMove();
 				}
@@ -150,7 +136,7 @@ public class ChessLogic {
 				if(!suppressCheckSearch)
 				{
 					doMove(movingPlayer, piece[1],piece[2],newCoordinatespp[0],newCoordinatespp[1],false);
-					if(!newCheck(movingPlayer))
+					if(!check(movingPlayer))
 						allMoves.add(newCoordinatespp);
 					undoMove();
 				}
@@ -164,7 +150,7 @@ public class ChessLogic {
 				if(!suppressCheckSearch)
 				{
 					doMove(movingPlayer, piece[1],piece[2],newCoordinatespp[0],newCoordinatespp[1],false);
-					if(!newCheck(movingPlayer))
+					if(!check(movingPlayer))
 						allMoves.add(newCoordinatespp);
 					undoMove();
 				}
@@ -177,7 +163,7 @@ public class ChessLogic {
 				if(!suppressCheckSearch)
 				{
 					doMove(movingPlayer, piece[1],piece[2],newCoordinatespp[0],newCoordinatespp[1],false);
-					if(!newCheck(movingPlayer))
+					if(!check(movingPlayer))
 						allMoves.add(newCoordinatespp);
 					undoMove();
 				}
@@ -200,7 +186,7 @@ public class ChessLogic {
 						if(!suppressCheckSearch)
 						{
 							doMove(movingPlayer, piece[1],piece[2],newCoordinatesr[0],newCoordinatesr[1],false);
-							if(!newCheck(movingPlayer))
+							if(!check(movingPlayer))
 								allMoves.add(newCoordinatesr);
 							undoMove();
 						}
@@ -229,7 +215,7 @@ public class ChessLogic {
 					if(!suppressCheckSearch)
 					{
 						doMove(movingPlayer, piece[1],piece[2],newCoordinatesr[0],newCoordinatesr[1],false);
-						if(!newCheck(movingPlayer))
+						if(!check(movingPlayer))
 							allMoves.add(newCoordinatesr);
 						undoMove();
 					}
@@ -255,7 +241,7 @@ public class ChessLogic {
 						if(!suppressCheckSearch)
 						{
 							doMove(movingPlayer, piece[1],piece[2],newCoordinatesr[0],newCoordinatesr[1],false);
-							if(!newCheck(movingPlayer))
+							if(!check(movingPlayer))
 								allMoves.add(newCoordinatesr);
 							undoMove();
 						}
@@ -282,7 +268,7 @@ public class ChessLogic {
 						if(!suppressCheckSearch)
 						{
 							doMove(movingPlayer, piece[1],piece[2],newCoordinatesr[0],newCoordinatesr[1],false);
-							if(!newCheck(movingPlayer))
+							if(!check(movingPlayer))
 								allMoves.add(newCoordinatesr);
 							undoMove();
 						}
@@ -297,14 +283,14 @@ public class ChessLogic {
 			boolean[]freeWay={false,false};
 			if(!suppressCheckSearch&&movingCastling[0])
 			{
-				if(!newCheck(movingPlayer)&&!figureAt(movingPlayer,piece[1]-1,piece[2])&&!figureAt(movingPlayer,piece[1]-2,piece[2])
+				if(!check(movingPlayer)&&!figureAt(movingPlayer,piece[1]-1,piece[2])&&!figureAt(movingPlayer,piece[1]-2,piece[2])
 										 &&!figureAt(-movingPlayer,piece[1]-1,piece[2])&&!figureAt(-movingPlayer,piece[1]-2,piece[2]))
 				{
 					doMove(movingPlayer,piece[1],piece[2],piece[1]-1,piece[2],false);
-					freeWay[0]=!newCheck(-movingPlayer);
+					freeWay[0]=!check(-movingPlayer);
 					undoMove();
 					doMove(movingPlayer,piece[1],piece[2],piece[1]-2,piece[2],false);
-					freeWay[1]=!newCheck(-movingPlayer);
+					freeWay[1]=!check(-movingPlayer);
 					undoMove();
 					if(freeWay[0]&&freeWay[1])
 					{
@@ -317,14 +303,14 @@ public class ChessLogic {
 			}
 			if(!suppressCheckSearch&&movingCastling[1])
 			{
-				if(!newCheck(movingPlayer)&&!figureAt(movingPlayer,piece[1]+1,piece[2])&&!figureAt(movingPlayer,piece[1]+2,piece[2])
+				if(!check(movingPlayer)&&!figureAt(movingPlayer,piece[1]+1,piece[2])&&!figureAt(movingPlayer,piece[1]+2,piece[2])
 										 &&!figureAt(-movingPlayer,piece[1]+1,piece[2])&&!figureAt(-movingPlayer,piece[1]+2,piece[2]))
 				{
 					doMove(movingPlayer,piece[1],piece[2],piece[1]+1,piece[2],false);
-					freeWay[0]=!newCheck(-movingPlayer);
+					freeWay[0]=!check(-movingPlayer);
 					undoMove();
 					doMove(movingPlayer,piece[1],piece[2],piece[1]+2,piece[2],false);
-					freeWay[1]=!newCheck(-movingPlayer);
+					freeWay[1]=!check(-movingPlayer);
 					undoMove();
 					if(freeWay[0]&&freeWay[1])
 					{
@@ -351,7 +337,7 @@ public class ChessLogic {
 						if(!suppressCheckSearch)
 						{
 							doMove(movingPlayer, piece[1],piece[2],newCoordinatesr[0],newCoordinatesr[1],false);
-							if(!newCheck(movingPlayer))
+							if(!check(movingPlayer))
 								allMoves.add(newCoordinatesr);
 							undoMove();
 						}
@@ -409,43 +395,7 @@ public class ChessLogic {
 		//blackTeam.add();
 	}
 	
-	/*public boolean[][] selectable(boolean blackturn)
-	{
-		boolean[][] canBeMoved= new boolean[size][size];
-		// TODO Auto-generated method stub
-		for(int x=0;x<size;x++)
-		{
-			for(int y=0;y<size;y++)
-			{
-				if(blackturn&&configuration[x][y]<0||!blackturn&&configuration[x][y]>0||configuration[x][y]==0)
-				{
-					canBeMoved[x][y]=false;
-				}
-				else
-				{
-					canBeMoved[x][y]=true;
-				}
-			}
-		}
-		return canBeMoved;
-	}*/
-	
-	/*private static boolean areAllFalse(boolean[][] array, int x,int y)
-	{
-	    for(boolean[] b : array)
-	    		for(boolean c : b)
-	    			if(c!=b[y]||b!=array[x])
-	    			//the move to the same field is always legal and thus ignored here
-	    			{
-	    				if(c)
-	    					{
-	    					
-	    					return false;
-	    					}
-	    				//System.out.println("Debug: x:"+x+" y:"+y+" c:"+c+" b:"+b[y]);
-	    			}
-	    return true;
-	}*/
+
 
 	public void aiMove(int i) 
 	{
@@ -456,22 +406,7 @@ public class ChessLogic {
 		aiPlayer.move(i);
 
 	}
-	/*public void setBoard(int[][] newBoard)
-	{
-		if(configuration==newBoard)
-			System.out.println("FUCK");
-		configuration=newBoard;
-		graphboard.paintFigures(blackTeam,whiteTeam);
-		System.out.println("Debug:setBoard");
-		System.out.println(createHash());
-	}*/
 
-	/*public int[][] getConfiguration() 
-	{
-		// TODO Auto-generated method stub
-		final int[][] carl =configuration;
-		return carl;
-	}*/
 
 	public boolean doMove(int player,int fromX,int fromY,int toX,int toY,boolean checkGameOver)
 	{
@@ -483,17 +418,7 @@ public class ChessLogic {
 		newValue=0;
 		if(fromX==toX&&fromY==toY)
 			return false;
-		//reset counter and hashlist if progress is made (pawn moved or figure captured)
-		/*if(checkGameOver&&configuration[fromY][fromX]==1||configuration[toY][toX]!=0)
-		{
-			hashList.clear();
-			quiesentMoveCounter=0;
-		}*/
-		
-		// actually "do" the move, manipulating the values of the board
-		/*int help=configuration[fromY][fromX];
-		configuration[fromY][fromX]=0;
-		configuration[toY][toX]=help;*/
+
 		try{
 			graphboard.paintFigures(blackTeam,whiteTeam);
 		}catch(Exception e){}
@@ -514,7 +439,7 @@ public class ChessLogic {
 		boolean moveOK=false;
 		for(int[] movedPiece : movingTeam)
 		{
-			//System.out.println("This part works!"+movedPiece[2]+"="+fromX+"?"+movedPiece[1]+"="+fromY+"?");
+
 			if(movedPiece[2]==fromY&&movedPiece[1]==fromX)
 			{
 				if(checkGameOver&&Math.abs(movedPiece[0])==1)
@@ -522,12 +447,12 @@ public class ChessLogic {
 					hashList.clear();
 					quiesentMoveCounter=0;
 				}
-				//System.out.println("That one too!");
+
 				moveOK=true;
 				if(checkGameOver&&(toY==size-1||toY==0)&&(Math.abs(movedPiece[0])==1))
 				{
 					movedPiece[0]*=6;
-					//configuration[toY][toX]=movedPiece[0];
+
 					System.out.println("Promotion!");
 				}
 				if(checkGameOver)
@@ -640,7 +565,7 @@ public class ChessLogic {
 		{
 			if(!passant&&(toY==size-4&&fromY==size-2||toY==3&&fromY==1))
 			{
-				System.out.println("default en-Passant Position!");
+				//System.out.println("default en-Passant Position!");
 				enPassantcoords[0]=-1;
 				enPassantcoords[1]=-1;
 			}
@@ -690,8 +615,8 @@ public class ChessLogic {
 			movingPlayer=BLACK;
 		
 		//TODO check for checkmate
-		if(checkGameOver&&newCheckMate(movingPlayer))
-			if(newCheck(movingPlayer))
+		if(checkGameOver&&checkMate(movingPlayer))
+			if(check(movingPlayer))
 				endGame(STALEMATE);
 			else
 				endGame(movingPlayer);
@@ -701,7 +626,7 @@ public class ChessLogic {
 	}
 	
 	public void undoMove()
-	{
+	{//TODO doesn't work for castling and en-passant
 		if(noMove)
 			return;
 		
@@ -716,16 +641,11 @@ public class ChessLogic {
 			movingTeam=whiteTeam;
 			enemyTeam=blackTeam;
 		}
-		
-		/*int help=configuration[newY][newX];
-		configuration[newY][newX]=newValue;
-		configuration[oldY][oldX]=help;*/
-		
-			//System.out.println("Piece:"+movedPiece[0]);
+
 		
 		
 		int[] newPiece={movingTeam.get(movedIndex)[0],oldX,oldY};
-		//System.out.println(newX+" "+newY+"->"+oldX+" "+oldY+"->"+movingTeam.get(movedIndex)[0]+" "+movingTeam.get(movedIndex)[1]+" "+movingTeam.get(movedIndex)[2]);
+		
 		movingTeam.set(movedIndex, newPiece);
 		if(newValue!=0)
 		{
@@ -747,15 +667,7 @@ public class ChessLogic {
 	private int createHash()
 	{
 		int hash=0;
-		
-		/*for(int x=0;x<size;x++)
-		{
-			for(int y=0;y<size;y++)
-			{
-				hash+=configuration[x][y]*Math.pow(10, y);
-				hash-=configuration[x][y]*Math.pow(10, x);
-			}
-		}*/
+
 		for(int[]piece : blackTeam)
 			hash+=piece[0]*Math.pow(1+piece[1], 1+piece[2]);
 		for(int[]piece : whiteTeam)
@@ -763,7 +675,7 @@ public class ChessLogic {
 		
 		return hash;
 	}
-	private boolean newCheck(int player)
+	private boolean check(int player)
 	{
 		//assign the teams
 		ArrayList<int[]> enemyTeam;
@@ -794,7 +706,7 @@ public class ChessLogic {
 			ArrayList<int[]> allMoves=possibleMoves(attacker,true);
 			for(int[] oneMove:allMoves)
 			{
-				//System.out.println(oneMove+" "+kingCoordinates);
+			
 				if(oneMove[0]==kingCoordinates[0]&&oneMove[1]==kingCoordinates[1])
 				{
 					checkCheck=true;
@@ -811,7 +723,7 @@ public class ChessLogic {
 		
 		return false;
 	}
-	private boolean newCheckMate(int player)
+	private boolean checkMate(int player)
 	{
 		//assign the teams
 		ArrayList<int[]> movingTeam;

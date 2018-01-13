@@ -20,14 +20,12 @@ public class Menu extends JFrame implements ActionListener {
 	public Menu()
 	{
 		//TODO Design the menu gui
-		JFrame menu=new JFrame();
+		
 		JPanel menuPane=new JPanel();
-		menu.setTitle("Java-Chess GUI");
-		menu.setSize(750, 800);
-		menu.setLocation(700,200);
-		menu.setResizable(true);
-		menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		menu.setLayout(new GridBagLayout());
+		setTitle("Java-Chess GUI");
+		setResizable(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLayout(new GridBagLayout());
 		
 		GridBagConstraints constraints=new GridBagConstraints();
 		constraints.gridx=0;
@@ -41,11 +39,12 @@ public class Menu extends JFrame implements ActionListener {
 		constraints.ipadx=00;
 		board=new BoardGUI((short) 8);
 		board.setVisible(true);
-		menu.add(board.board,constraints);
+		add(board,constraints);
 		
 		reset=new JButton("Reset Game");
 		reset.addActionListener(this);
 		toggleAI=new JToggleButton("Toggle AI");
+		toggleAI.setEnabled(false);//Set disabled until the game itself works
 		toggleAI.addActionListener(this);
 		menuPane.add(reset);
 		menuPane.add(toggleAI);
@@ -55,9 +54,11 @@ public class Menu extends JFrame implements ActionListener {
 		constraints.gridheight=1;
 		constraints.gridwidth=1;
 		constraints.ipady=0;
-		menu.add(menuPane,constraints);
-		//menu.pack();
-		menu.setVisible(true);
+		add(menuPane,constraints);
+		pack();
+		setResizable(false);
+		setVisible(true);
+		setLocationRelativeTo(null);
 		
 		
 	}
@@ -66,12 +67,7 @@ public class Menu extends JFrame implements ActionListener {
 	{
 		Menu menu= new Menu();
 
-		
-		
 	}
-	
-	
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub

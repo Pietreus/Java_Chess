@@ -25,6 +25,7 @@ public class Bengine {
 		
 		//System.out.println("Does this Work?");
 	}
+	
 	private int negaMaxRoot(int depth, int player, ChessLogic gameLogic)
 	{
 		bestMove=new int[4];
@@ -59,22 +60,7 @@ public class Bengine {
 	    	System.out.println("Score: "+score+"   Max :"+max);
 	        if( score > max )
 	        {
-	            max = score;
-	            bestMove=Arrays.copyOf(move, 4);
-	           // Move.setBoard(temp);
-	            
-	           /*currentsuperbestBoard=new int[temp.length][];
-	            for(int i = 0; i < temp.length; i++)
-	            {
-	            	int[] aMatrix = temp[i];
-	            	int   aLength = aMatrix.length;
-	            	currentsuperbestBoard[i] = new int[aLength];
-	            	System.arraycopy(aMatrix, 0, currentsuperbestBoard[i], 0, aLength);
 
-	            }*/
-	            
-	            //Move.setBoard(temp);
-	            //System.out.println("WORK "+max);
 	        }
 	    }
 	    System.out.println("Final alpha:"+max+" Final Move: "+bestMove[0]+":"+bestMove[1]+"->"+bestMove[2]+":"+bestMove[3]);
@@ -88,8 +74,7 @@ public class Bengine {
 		s++;
 	    if ( depth == 0 )
 	    {
-	    	//currentBoard=currentboard;
-	    	//System.out.println("Evaluation");
+	
 	    	int newScore=staticEvaluation(player,tempGame);
 	    	return newScore;
 	    	
@@ -100,9 +85,7 @@ public class Bengine {
 	    allMoves.clear();
 	    int score=0;
 	    allMoves=getpossibleMoves(player,tempGame);
-	    
-	    
-	    
+	   
 	    if(allMoves.size()>0)
 	    {
 
@@ -128,7 +111,7 @@ public class Bengine {
 		    	tempLogic.doMove(player, move[0], move[1], move[2], move[3], true);
 			           /* tempGame = new int[temp.length][];*/
 			            //currentBoard=myInt;
-			            //System.out.println("Deepening");
+
 			    score=0;
 				score = -negaMax(-beta,-alpha,(depth-1),(-player),tempGame);
 				tempLogic.movingPlayer=player;
@@ -150,22 +133,20 @@ public class Bengine {
 			    	 
 		    }
 	    }
-	    else
+	    else//if there are no possible moves left, its a checkmate( or a draw)
 	    {
-	    	//currentBoard=Arrays.copyOf(currentboard);
-    		alpha=-5000;//staticEvaluation(player, currentboard);
-    		//System.out.println("Evaluation");
+	    	
+    		alpha=-5000;
+
     		
 	    }
 	  
 	    return alpha;
 	}
+	
 	private ArrayList<int[]> getpossibleMoves(int player,ChessLogic tempGame)
 	{
 	
-		//evaluationBoards.clear();
-		//int counter=0;
-		//final int[][] staticboard=currentboard;
 		ArrayList<int[]> moveList=new ArrayList<int[]>();
 		tempGame.movingPlayer=player;
 		for(int[]figure:player==BLACK?tempGame.blackTeam:tempGame.whiteTeam)
@@ -178,15 +159,15 @@ public class Bengine {
 			}
 		return moveList;
 	}
+
 	public void setBoard(ChessLogic newBoard)
 	{
 		gameboard=newBoard;
 	}
 	
-	private int staticEvaluation(int player,ChessLogic tempGame)
+	private int staticEvaluation(int player,ChessLogic tempGame)//uses three approaches for evaluation plus a random factor
 	{
 		int score=0;
-		//System.out.println(chance.nextInt(100));
 		
 		score=(int) (chance.nextInt(200)-100+0.1*positions(player,tempGame));//+10*mobility(player,tempGame);
 		return score;
@@ -311,7 +292,9 @@ public class Bengine {
 			return (int) (player==BLACK?materialScore:-materialScore);
 
 	}
-	private int mobility(int player, ChessLogic tempGame) {
+	
+	private int mobility(int player, ChessLogic tempGame)
+	{
 		// TODO Auto-generated method stub
 		int mobility=0;
 		for(int[] figure:tempGame.blackTeam)
@@ -324,10 +307,10 @@ public class Bengine {
 		
 	}
 
-	private double material(int player,ChessLogic tempGame) {
+	private double material(int player,ChessLogic tempGame)
+	{
 
-		// TODO Auto-generated method stub
-		//System.out.println("Debug: Material Evaluation called");
+
 		double materialScore=0;
 		double score=0;
 		ArrayList<ArrayList<int[]>>teams=new ArrayList<ArrayList<int[]>>();
@@ -357,8 +340,6 @@ public class Bengine {
 			}
 		
 		
-			//if(Integer.signum(figure[0])==player*2-1)
-				score*=1.5;
 			materialScore+=score;
 			score=0;
 			
