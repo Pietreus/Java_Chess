@@ -60,28 +60,28 @@ public class BoardGUI extends JPanel implements ActionListener{
 			{
 			case (1):
 				if(i%2==0)
-					return PAWN.name();
-				return PAWN.name()+"_white";
+					return PAWN.name;
+				return PAWN.name+"_white";
 			case (2):
 				if(i%2==0)
 					return ROOK.name;
 				return ROOK.name+"_white";
 			case (3):
 				if(i%2==0)
-					return KNIGHT.name();
-				return KNIGHT.name()+"_white";
+					return KNIGHT.name;
+				return KNIGHT.name+"_white";
 			case (4):
 				if(i%2==0)
-					return BISHOP.name();
-				return BISHOP.name()+"_white";
+					return BISHOP.name;
+				return BISHOP.name+"_white";
 			case (5):
 				if(i%2==0)
-					return KING.name();
-				return KING.name()+"_white";
+					return KING.name;
+				return KING.name+"_white";
 			case (6):
 				if(i%2==0)
-					return QUEEN.name();
-				return QUEEN.name()+"_white";
+					return QUEEN.name;
+				return QUEEN.name+"_white";
 				
 			}
 			return "";
@@ -175,8 +175,8 @@ public class BoardGUI extends JPanel implements ActionListener{
 		File iconPicture[]=new File[12];
 		for(int i=0;i<12;i++)
 		{
-			iconPicture[i]=new File("./BoardResources/chess_symbol_"+Figure.nameByValue(i)+"_T.png");
-			
+			iconPicture[i]=new File("./BoardResources/chess_symbol_" + Figure.nameByValue(i) + "_T.png");
+			System.out.println("Icon-Image found for: " + Figure.nameByValue(i) + "_T.png");
 			try
 			{
 				icon[i]=new ImageIcon(ImageIO.read(iconPicture[i]).getScaledInstance(iconSize, iconSize, Image.SCALE_DEFAULT));
@@ -184,7 +184,7 @@ public class BoardGUI extends JPanel implements ActionListener{
 			catch(Exception e)
 			{
 				icon[i]=null;
-				System.out.println("Icon-Image not found");
+				System.out.println("Icon-Image not found for: " + Figure.nameByValue(i) + "_T.png");
 			}
 		}
 		gameLogic.setBoard(this);

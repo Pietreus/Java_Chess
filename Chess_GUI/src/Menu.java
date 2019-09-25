@@ -44,7 +44,7 @@ public class Menu extends JFrame implements ActionListener {
 		reset=new JButton("Reset Game");
 		reset.addActionListener(this);
 		toggleAI=new JToggleButton("Toggle AI");
-		toggleAI.setEnabled(false);//Set disabled until the game itself works
+		//toggleAI.setEnabled(false);//Set disabled until the game itself works
 		toggleAI.addActionListener(this);
 		menuPane.add(reset);
 		menuPane.add(toggleAI);
