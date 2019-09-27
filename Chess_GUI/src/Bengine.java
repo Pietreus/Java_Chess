@@ -17,7 +17,7 @@ public class Bengine {
 		
 		//currentbestBoard=Move.getConfiguration();
 		if(player==BLACK)
-			negaMaxRoot(5,BLACK,gameboard);
+			negaMaxRoot(7,BLACK,gameboard);
 		else
 			negaMaxRoot(2,WHITE,gameboard);
 		//currentbestBoard=Move.getConfiguration();
@@ -31,7 +31,7 @@ public class Bengine {
 		bestMove=new int[4];
 		s=0;
 		int max=-10000000;
-		//if(depth%2==0)player=1-player;
+
 		
 		ArrayList<int[]> allMoves=new ArrayList<int[]>();
 	    allMoves.clear();
@@ -56,11 +56,14 @@ public class Bengine {
 	    	ChessLogic tempLogic=new ChessLogic(tempBlackTeam,tempWhiteTeam,gameLogic.blackCastling,gameLogic.whiteCastling,gameLogic.enPassantcoords);
 	    	tempLogic.movingPlayer=player;
 	    	tempLogic.doMove(player, move[0], move[1], move[2], move[3], true);
-	    	score = -negaMax(-100000,-max,(depth-1),(-player),tempLogic);
+	    	score = -negaMax(max,-max,(depth-1),(-player),tempLogic);
 	    	System.out.println("Score: "+score+"   Max :"+max);
 	        if( score > max )
 	        {
-
+	        	//TODO what is that for?
+				max=score;
+				bestMove = move.clone();
+				System.out.println(bestMove[0]+":"+bestMove[1]+"->"+bestMove[2]+":"+bestMove[3]);
 	        }
 	    }
 	    System.out.println("Final alpha:"+max+" Final Move: "+bestMove[0]+":"+bestMove[1]+"->"+bestMove[2]+":"+bestMove[3]);
@@ -72,7 +75,7 @@ public class Bengine {
 	private int negaMax(int alpha,int beta, int depth,int player,final ChessLogic tempGame) {//1 for black 0 for white
 		//System.out.println("Depth: "+depth+" Iteration: "+s+" Current Alpha:"+alpha+" Player: "+player);
 		s++;
-	    if ( depth == 0 )
+	    if ( depth == depth )
 	    {
 	
 	    	int newScore=staticEvaluation(player,tempGame);
@@ -83,27 +86,25 @@ public class Bengine {
 	    
 		ArrayList<int[]> allMoves=new ArrayList<int[]>();
 	    allMoves.clear();
-	    int score=0;
+	    int score=-999999999;
 	    allMoves=getpossibleMoves(player,tempGame);
 	   
 	    if(allMoves.size()>0)
 	    {
 
-	    	
-	    	
 		    for (int[] move:allMoves)  
 		    {//all possible moves
 		    	//score=max;
 		    	ArrayList<int[]> tempBlackTeam = new ArrayList<int[]>(),tempWhiteTeam = new ArrayList<int[]>();
 		    	for(int[] piece: tempGame.blackTeam)
 		    	{
-		    		int[] newPiece=new int[3];
+		    		int[] newPiece;
 		    		newPiece=Arrays.copyOf(piece, 3);
 		    		tempBlackTeam.add(newPiece);
 		    	}
 		    	for(int[] piece: tempGame.whiteTeam)
 		    	{
-		    		int[] newPiece=new int[3];
+		    		int[] newPiece;
 		    		newPiece=Arrays.copyOf(piece, 3);
 		    		tempWhiteTeam.add(newPiece);
 		    	}
@@ -112,31 +113,28 @@ public class Bengine {
 			           /* tempGame = new int[temp.length][];*/
 			            //currentBoard=myInt;
 
-			    score=0;
-				score = -negaMax(-beta,-alpha,(depth-1),(-player),tempGame);
+			    //score=0;
+				score = Math.max(-negaMax(-beta,-alpha,(depth-1),(-player),tempGame),score);
+				alpha = Math.max(score,alpha);
 				tempLogic.movingPlayer=player;
 				//tempLogic.undoMove();
 				//tempLogic.undoMove();
-				       
-		    	if(score>=beta)
-		    	{
-		    		//System.out.println("New Alpha: "+beta);
-		    		return beta;
-		    	}
-		        if( score > alpha )
-		        {
-		    		
-		            alpha = score;
-		            //System.out.println("New Alpha: "+alpha);
-	
-		        }
+				if(alpha >= beta)
+				{
+					//System.out.println("New Alpha: "+beta);
+					return alpha;
+				}
+
+
+
+
 			    	 
 		    }
 	    }
 	    else//if there are no possible moves left, its a checkmate( or a draw)
 	    {
 	    	
-    		alpha=-5000;
+    		alpha=-500000000;
 
     		
 	    }
@@ -167,9 +165,10 @@ public class Bengine {
 	
 	private int staticEvaluation(int player,ChessLogic tempGame)//uses three approaches for evaluation plus a random factor
 	{
+	    //include check,checkmate and patt chacker
 		int score=0;
 		
-		score=(int) (chance.nextInt(200)-100+0.1*positions(player,tempGame));//+10*mobility(player,tempGame);
+		score=(int)(chance.nextInt(20)-10+0.1*positions(player,tempGame));//+10*mobility(player,tempGame);
 		return score;
 		
 		

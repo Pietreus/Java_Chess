@@ -716,7 +716,7 @@ public class ChessLogic {
 			}
 			if(checkCheck)
 			{
-				System.out.println("King of moving Team is checked!");
+				//System.out.println("King of moving Team is checked!");
 				return true;
 			}
 		}
