@@ -1,8 +1,9 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
 import javax.swing.JOptionPane;
-
+	//TODO chesslogicObject: construct from/compress to text representation? avoids the problem with object referencing
 public class ChessLogic {
 
 	private BoardGUI graphboard=null;
@@ -19,7 +20,7 @@ public class ChessLogic {
 	private static final int STALEMATE=-2;
 	int movingPlayer=0;
 	private int oldX,oldY,newX,newY,newValue,movedIndex;
-	boolean[]whiteCastling={false,false};
+	boolean[] whiteCastling={false,false};
 	boolean[] blackCastling={false,false};
 	int[] enPassantcoords={-1,-1};
 	private boolean noMove=false;
@@ -37,6 +38,17 @@ public class ChessLogic {
 		blackCastling=newBlackCastling;
 		whiteCastling=newWhiteCastling;
 		enPassantcoords=newEnPassantCoords;
+	}
+	public ChessLogic(ChessLogic oldLogic)
+	{
+
+		this.blackTeam= new ArrayList<int[]>();
+		for(int[] teamMember : oldLogic.blackTeam)this.blackTeam.add(teamMember.clone());
+		this.whiteTeam=new ArrayList<int[]>();
+		for(int[] teamMember : oldLogic.whiteTeam)this.whiteTeam.add(teamMember.clone());
+		this.blackCastling=oldLogic.blackCastling;
+		this.whiteCastling=oldLogic.whiteCastling;
+		this.enPassantcoords=oldLogic.enPassantcoords;
 	}
 	public void setBoard(BoardGUI newBoard)
 	{
@@ -442,6 +454,7 @@ public class ChessLogic {
 
 			if(movedPiece[2]==fromY&&movedPiece[1]==fromX)
 			{
+
 				if(checkGameOver&&Math.abs(movedPiece[0])==1)
 				{
 					hashList.clear();
@@ -675,7 +688,7 @@ public class ChessLogic {
 		
 		return hash;
 	}
-	private boolean check(int player)
+	boolean check(int player)
 	{
 		//assign the teams
 		ArrayList<int[]> enemyTeam;
@@ -723,7 +736,7 @@ public class ChessLogic {
 		
 		return false;
 	}
-	private boolean checkMate(int player)
+	boolean checkMate(int player)
 	{
 		//assign the teams
 		ArrayList<int[]> movingTeam;

@@ -17,7 +17,7 @@ public class Bengine {
 		
 		//currentbestBoard=Move.getConfiguration();
 		if(player==BLACK)
-			negaMaxRoot(7,BLACK,gameboard);
+			negaMaxRoot(4,BLACK,gameboard);
 		else
 			negaMaxRoot(2,WHITE,gameboard);
 		//currentbestBoard=Move.getConfiguration();
@@ -30,7 +30,7 @@ public class Bengine {
 	{
 		bestMove=new int[4];
 		s=0;
-		int max=-10000000;
+		int max=-1000000000;
 
 		
 		ArrayList<int[]> allMoves=new ArrayList<int[]>();
@@ -72,18 +72,16 @@ public class Bengine {
 	    return max;
 	}
 
-	private int negaMax(int alpha,int beta, int depth,int player,final ChessLogic tempGame) {//1 for black 0 for white
+	private int negaMax(int alpha,int beta, int depth,int player, ChessLogic tempoGame) {//1 for black 0 for white
 		//System.out.println("Depth: "+depth+" Iteration: "+s+" Current Alpha:"+alpha+" Player: "+player);
+		ChessLogic tempGame = new ChessLogic(tempoGame);
 		s++;
-	    if ( depth == depth )
+	    if ( depth == 0 )
 	    {
-	
 	    	int newScore=staticEvaluation(player,tempGame);
 	    	return newScore;
-	    	
 	    }
-	    
-	    
+
 		ArrayList<int[]> allMoves=new ArrayList<int[]>();
 	    allMoves.clear();
 	    int score=-999999999;
@@ -94,7 +92,6 @@ public class Bengine {
 
 		    for (int[] move:allMoves)  
 		    {//all possible moves
-		    	//score=max;
 		    	ArrayList<int[]> tempBlackTeam = new ArrayList<int[]>(),tempWhiteTeam = new ArrayList<int[]>();
 		    	for(int[] piece: tempGame.blackTeam)
 		    	{
@@ -114,7 +111,7 @@ public class Bengine {
 			            //currentBoard=myInt;
 
 			    //score=0;
-				score = Math.max(-negaMax(-beta,-alpha,(depth-1),(-player),tempGame),score);
+				score = Math.max(-negaMax(-beta,-alpha,(depth-1),(-player),tempLogic),score);
 				alpha = Math.max(score,alpha);
 				tempLogic.movingPlayer=player;
 				//tempLogic.undoMove();
@@ -125,20 +122,16 @@ public class Bengine {
 					return alpha;
 				}
 
-
-
-
-			    	 
 		    }
+
 	    }
 	    else//if there are no possible moves left, its a checkmate( or a draw)
 	    {
 	    	
-    		alpha=-500000000;
-
+    		alpha=-5000000;
     		
 	    }
-	  
+
 	    return alpha;
 	}
 	
@@ -165,10 +158,12 @@ public class Bengine {
 	
 	private int staticEvaluation(int player,ChessLogic tempGame)//uses three approaches for evaluation plus a random factor
 	{
-	    //include check,checkmate and patt chacker
+	    //TODO include check,checkmate and patt checker
 		int score=0;
-		
-		score=(int)(chance.nextInt(20)-10+0.1*positions(player,tempGame));//+10*mobility(player,tempGame);
+		if(tempGame.checkMate(player))return -9999999;
+
+		score=(int)(chance.nextInt(20)-10+positions(player,tempGame))+10*mobility(player,tempGame);
+		if(tempGame.check(player))score-=50;
 		return score;
 		
 		
@@ -177,7 +172,7 @@ public class Bengine {
 	private int positions(int player, ChessLogic tempGame) 
 	{
 		// pawn
-		 int[][]pawnmap={
+		int[][]pawnmap={
 				{0,  0,  0,  0,  0,  0,  0,  0},
 				{5, 10, 10,-20,-20, 10, 10,  5},
 				{5, -5,-10,  0,  0,-10, -5,  5},
@@ -196,7 +191,7 @@ public class Bengine {
 				{-30,  5, 10, 15, 15, 10,  5,-30},
 				{-40,-20,  0,  5,  5,  0,-20,-40},
 				{-50,-40,-30,-30,-30,-30,-40,-50}};
-		 int[][]bishopmap={
+		int[][]bishopmap={
 				{-20,-10,-10,-10,-10,-10,-10,-20},
 				{-10,  5,  0,  0,  0,  0,  5,-10},
 				{-10, 10, 10, 10, 10, 10, 10,-10},
@@ -205,7 +200,7 @@ public class Bengine {
 				{-10,  0,  5, 10, 10,  5,  0,-10},
 				{-10,  0,  0,  0,  0,  0,  0,-10},
 				{-20,-10,-10,-10,-10,-10,-10,-20}};
-		 int[][]rookmap={
+		int[][]rookmap={
 				{0,  0,  0,  5,  5,  0,  0,  0},
 				{-5,  0,  0,  0,  0,  0,  0, -5},
 				{-5,  0,  0,  0,  0,  0,  0, -5},
@@ -214,7 +209,7 @@ public class Bengine {
 				{-5,  0,  0,  0,  0,  0,  0, -5},
 				{5, 10, 10, 10, 10, 10, 10,  5},
 				{0,  0,  0,  0,  0,  0,  0,  0}};
-		 int[][]queenmap={
+		int[][]queenmap={
 				{-20,-10,-10, -5, -5,-10,-10,-20},
 				{-10,  0,  0,  0,  0,  0,  0,-10},
 				{-10,  0,  5,  5,  5,  5,  0,-10},
@@ -223,15 +218,15 @@ public class Bengine {
 				{-10,  5,  5,  5,  5,  5,  0,-10},
 				{-10,  0,  5,  0,  0,  0,  0,-10},
 				{-20,-10,-10, -5, -5,-10,-10,-20}};
-		 int[][]kingmap={
-				 { 20, 30, 10,  0,  0, 10, 30, 20},
-				 { 20, 20,  0,  0,  0,  0, 20, 20},
-				 {-10,-20,-20,-20,-20,-20,-20,-10},
-				 {-20,-30,-30,-40,-40,-30,-30,-20},
-				 {-30,-40,-40,-50,-50,-40,-40,-30},
-				 {-30,-40,-40,-50,-50,-40,-40,-30},
-				 {-30,-40,-40,-50,-50,-40,-40,-30},
-				 {-30,-40,-40,-50,-50,-40,-40,-30}};
+		int[][]kingmap={
+				{ 20, 30, 10,  0,  0, 10, 30, 20},
+				{ 20, 20,  0,  0,  0,  0, 20, 20},
+				{-10,-20,-20,-20,-20,-20,-20,-10},
+				{-20,-30,-30,-40,-40,-30,-30,-20},
+				{-30,-40,-40,-50,-50,-40,-40,-30},
+				{-30,-40,-40,-50,-50,-40,-40,-30},
+				{-30,-40,-40,-50,-50,-40,-40,-30},
+				{-30,-40,-40,-50,-50,-40,-40,-30}};
 				
 			double materialScore=0;
 			double score=0;
@@ -244,42 +239,42 @@ public class Bengine {
 					switch(Math.abs(figure[0]))
 					{
 					case 1:
-						materialScore+=100*Integer.signum(figure[0]);
+						materialScore+=10*Integer.signum(figure[0]);
 						if(player==BLACK)
 							materialScore+=pawnmap[figure[1]][figure[2]];
 						else 
 							materialScore-=pawnmap[figure[1]][7-figure[2]];
 						break;
 					case 3:
-						materialScore+=320*Integer.signum(figure[0]);
+						materialScore+=32*Integer.signum(figure[0]);
 						if(player==BLACK)
 							materialScore+=knightmap[figure[1]][figure[2]];
 						else 
 							materialScore-=knightmap[figure[1]][7-figure[2]];
 						break;
 					case 4:
-						materialScore+=330*Integer.signum(figure[0]);
+						materialScore+=33*Integer.signum(figure[0]);
 						if(player==BLACK)
 							materialScore+=bishopmap[figure[1]][figure[2]];
 						else 
 							materialScore-=bishopmap[figure[1]][7-figure[2]];
 						break;
 					case 2:
-						materialScore+=500*Integer.signum(figure[0]);
+						materialScore+=50*Integer.signum(figure[0]);
 						if(player==BLACK)
 							materialScore+=rookmap[figure[1]][figure[2]];
 						else 
 							materialScore-=rookmap[figure[1]][7-figure[2]];
 						break;
 					case 6:
-						materialScore+=900*Integer.signum(figure[0]);
+						materialScore+=90*Integer.signum(figure[0]);
 						if(player==BLACK)
 							materialScore+=queenmap[figure[1]][figure[2]];
 						else 
 							materialScore-=queenmap[figure[1]][7-figure[2]];
 						break;
 					case 5:
-						materialScore+=20000*Integer.signum(figure[0]);
+						materialScore+=200*Integer.signum(figure[0]);
 						if(player==BLACK)
 							materialScore+=kingmap[figure[1]][figure[2]];
 						else 
@@ -337,7 +332,6 @@ public class Bengine {
 				score=200*Integer.signum(figure[0]);
 				break;
 			}
-		
 		
 			materialScore+=score;
 			score=0;
